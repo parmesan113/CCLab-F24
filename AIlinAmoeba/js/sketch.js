@@ -8,63 +8,83 @@ let x6 = 2, y6 = 224;
 let d1 = 30;
 let celltype1X = [], celltype1Y = [];
 let initialNumberOfCellType1 = 40;
-let amoebaColor = [255, 255, 255,150]; 
-let transparency=[150]
+let amoebaColor = [255, 255, 255, 150]; 
+let n = 9;
+let r = 150;
+let randomArray = [];
+let transparency = [150];
 let amoebaScale = 1;
 let colors = [];
 let chemicalColor = 255;
 let circleColor = [0, 255, 0];
 let clickCount = 0;
 
+let xPosition = 400;
 let yPosition;
 let amplitude = 20;
 let speed = 0.5;
 let angleSin = 0;
 
+let amoebaDirection;
+
 function setup() {
-  let cnv = createCanvas(800, 500);
-  cnv.parent("p5-canvas-container")
+  createCanvas(800, 500);
   for (let i = 0; i < initialNumberOfCellType1; i++) {
     celltype1X[i] = random(0, width);
     celltype1Y[i] = random(0, height);
     colors[i] = color(random(255), 0, 0);
   }
+  for (let i = 0; i < n; i++) {
+    randomArray.push(random(1, 3));
+  }
+  
+  amoebaDirection = random(TWO_PI);
 }
 
 function draw() {
-  background(30, 0, 0);
+  background(30, 0, 0)
+  fill(255)
+  textSize(20)
+  text("body temperature:X",10,20)
 
+  
   if (circleColor[0] == 255 && circleColor[1] == 255 && circleColor[2] == 255 && clickCount == 3) {
-    yPosition = height / 2 + amplitude * sin(angleSin);
+    yPosition = 320 + amplitude * sin(angleSin);
     angleSin += speed;
   } else {
-    yPosition = 250;
+    yPosition = 320;
+  }
+
+  
+  xPosition += cos(amoebaDirection) * 2; 
+  yPosition += sin(amoebaDirection) * 2; 
+
+  
+  if (xPosition < 0 || xPosition > width) {
+    amoebaDirection = PI - amoebaDirection; 
+  }
+  if (yPosition < 0 || yPosition > height) {
+    amoebaDirection = -amoebaDirection; 
   }
 
   drawCelltype1();
   drawMainCell();
-  drawAmoeba(amoebaColor, amoebaScale, yPosition); 
+  drawAmoeba(amoebaColor, amoebaScale, xPosition, yPosition); 
   drawScientist(mouseX, 340);
   drawBottle();
   drawCelltype2();
 }
 
-function drawAmoeba(amoebaColor, amoebaScale, amoebaY) {
+function drawAmoeba(amoebaColor, amoebaScale) {
   push();
-  translate(400, amoebaY);
+  translate(xPosition - sin(frameCount * 0.01) * 100, yPosition + sin(frameCount * 0.01) * 100);
   scale(amoebaScale);
   fill(amoebaColor);
   beginShape();
-  curveVertex(-10, -92);
-  curveVertex(-45, 0);
-  curveVertex(-110, 10);
-  curveVertex(-50, 60);
-  curveVertex(-68, 124);
-  curveVertex(-5, 85);
-  curveVertex(47, 124);
-  curveVertex(35, 59);
-  curveVertex(87, 7);
-  curveVertex(22, 3);
+  for (let i = 0; i < n; i++) {
+    curveVertex(r * cos(i * ((2 * PI) / n)) * noise(frameCount * 0.01 + randomArray[i]), 
+               r * sin(i * ((2 * PI) / n)) * noise(frameCount * 0.01 + randomArray[i]));
+  }
   endShape(CLOSE);
   pop();
 }
@@ -87,7 +107,6 @@ function drawCelltype1() {
   for (let i = 0; i < celltype1X.length; i++) {
     let x = celltype1X[i];
     let y = celltype1Y[i];
-
     let angle = random(0, 45);
     push();
     translate(x, y);
@@ -136,94 +155,44 @@ function drawCelltype2() {
   }
 }
 
-
-
 function drawBottle() {
-  fill(255)
+  fill(255);
   quad(mouseX + 140, 340, mouseX + 140, 300, mouseX + 160, 300, mouseX + 160, 340);
-  fill(0)
-  strokeWeight(4)
-  line(mouseX + 140,343,mouseX + 150,343)
+  fill(0);
+  strokeWeight(4);
+  line(mouseX + 140, 343, mouseX + 150, 343);
   
-  noStroke()
+  noStroke();
   fill(circleColor);
   circle(mouseX + 150, 340, 50);
 }
 
-function mousePressed(){
+function mousePressed() {
   clickCount++;
   console.log("Click count:", clickCount); 
-if(clickCount==0){
-    circleColor=[0,255,0]
+  if (clickCount == 0) {
+    circleColor = [0, 255, 0];
+  }
+  if (clickCount == 1) {
+    circleColor = [255, 255, 255];
+    amoebaScale = 1.5;
+  }
+  if (clickCount == 2) {
+    circleColor = [0, 0, 255];
+    amoebaScale = 1;
+  }
+  if (clickCount == 3) {
+    circleColor = [255, 255, 255];
+  }
+  if (clickCount == 4) {
+    circleColor = [255, 0, 255];
+  }
+  if (clickCount == 5) {
+    circleColor = [255, 255, 255];
+    amoebaColor = [random(255), random(255), random(255), 150];
+  }
+  if (clickCount == 6) {
+    circleColor = [0, 255, 0];
+    clickCount = 0;
+  }
 }
-  if(clickCount==1){
-    circleColor=[255,255,255]
-    amoebaScale = 1.5
-    
-}
-  if(clickCount==2){
-    circleColor=[0,0,255]
-    amoebaScale=1
-}
-  if(clickCount==3){
-    circleColor=[255,255,255]
-    
-}
-  if(clickCount==4){
-    circleColor=[255,0,255]
-    
-}
-  if(clickCount==5){
-    circleColor=[255,255,255]
-    amoebaColor = [random(255), random(255), random(255),150]
-
-}
-  if(clickCount==6){
-    circleColor=[0,255,0]
-    clickCount=0
-    
-}
-  
-}
-  
-  
-//   if (circleColor[0] == 0 && circleColor[1] == 255 && circleColor[2] == 0 && mouseX < 400 && mouseX > 100) {
-//     amoebaScale = 1.5;
-//   } else {
-//     amoebaScale = 1;
-//   }
-
-//   if (circleColor[0] == 0 && circleColor[1] == 255 && circleColor[2] == 0 && mouseX < 400 && mouseX > 100) {
-//     circleColor = [255, 255, 255];
-//   }
-
-//   if (clickCount == 2) {
-//     if (circleColor[0] == 255 && circleColor[1] == 255 && circleColor[2] == 255 && mouseX < 400 && mouseX > 100) {
-//       circleColor = [0, 0, 255];
-//     }
-//   }
-
-//   if (clickCount == 3) {
-//     if (circleColor[0] == 0 && circleColor[1] == 0 && circleColor[2] == 255 && mouseX < 400 && mouseX > 100) {
-//       circleColor = [255, 255, 255];
-//     }
-//   }
-
-//   if (clickCount == 4) {
-//     if (circleColor[0] == 255 && circleColor[1] == 255 && circleColor[2] == 255 && mouseX < 400 && mouseX > 100) {
-//       circleColor = [255, 0, 255];
-//     }
-//   }
-
-//   if (clickCount == 5) {
-//     if (circleColor[0] == 255 && circleColor[1] == 0 && circleColor[2] == 255 && mouseX < 400 && mouseX > 100) {
-//       circleColor = [255, 255, 255];
-//       amoebaColor = [random(255), random(255), random(255),150]; 
-//       console.log("Amoeba color changed to:", amoebaColor); 
-//       // clickCount = 0; 
-//     }
-//     clickCount = 0 
-//   }
-
-  
-

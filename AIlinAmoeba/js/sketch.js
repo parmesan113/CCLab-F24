@@ -28,7 +28,9 @@ let angleSin = 0;
 let amoebaDirection;
 
 function setup() {
-  createCanvas(800, 500);
+  // createCanvas(800, 500);
+  let cnv=creatCanvas=(800,500)
+  cnv.parent("p5-canvas-container");
   for (let i = 0; i < initialNumberOfCellType1; i++) {
     celltype1X[i] = random(0, width);
     celltype1Y[i] = random(0, height);

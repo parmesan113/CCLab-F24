@@ -41,9 +41,9 @@ let cell2X = 400;
 let cell2Y = 250;
 
 function setup() {
-  createCanvas(800, 500);
-  //let cnv=createCanvas(800,500)
-  //cnv.parent("p5-canvas-container");
+  //createCanvas(800, 500);
+  let cnv=createCanvas(800,500)
+  cnv.parent("p5-canvas-container");
   for (let i = 0; i < initialNumberOfCellType1; i++) {
     celltype1X[i] = random(0, width);
     celltype1Y[i] = random(0, height);

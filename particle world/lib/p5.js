@@ -7,7 +7,7 @@
   } else {
     var g;
     if (typeof window !== 'undefined') {
-       g = window
+      g = window
     } else if (typeof global !== 'undefined') {
       g = global
     } else if (typeof self !== 'undefined') {

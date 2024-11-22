@@ -1,0 +1,32 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+canvas {
+  display: block;
+}
+
+.main-container {
+  background-color: bisque;
+}
+
+.headline-container {
+  background-color: aquamarine;
+}
+
+.center-container {
+  background-color: chartreuse;
+}
+
+.description-container {
+  background-color: coral;
+  display: flex
+}
+
+
+
+canvas {
+  margin: auto;
+}

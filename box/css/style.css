@@ -1,0 +1,44 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+canvas {
+  display: block;
+}
+
+h1 {
+  color: palegreen;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.box {
+  border-width: 1px;
+  border-style: dotted;
+  border-color: aqua;
+  border: 1px dotted black;
+
+  margin: 10px;
+  padding: 10px;
+  margin-top: 100px;
+  background-color: aqua;
+}
+
+.box2 {
+  border: 1px dotted black;
+
+  margin: 10px;
+  padding: 10px;
+  margin-top: 100px;
+  background-color: aqua;
+  position: absolute;
+  left: 500px;
+  top: 0px;
+}
+
+kk {
+  position: relative
+}
+
+/* position: relative    position: fixed

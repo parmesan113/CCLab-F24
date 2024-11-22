@@ -1,0 +1,51 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+canvas {
+  display: block;
+}
+
+h1{
+  color: rebeccapurple;
+  font-family:sans-serif;
+}
+
+p{
+  background-color: blanchedalmond;
+}
+
+.box{
+  /* border-width: 1px;
+  border-style: dotted;
+  border-color: black; */
+  border:1px dotted black;
+  margin: 10px;
+  padding: 10px;
+  /* margin-bottom: 100px; */
+  background-color: aquamarine;
+}
+
+.box2{
+  position: absolute;
+  left: 500px;
+  top: 20px;
+}
+
+.box3{
+  position: fixed;
+  right: 50px;
+  bottom: 50px;
+}
+
+.box4{
+  position: relative;
+  left: 10px;
+  top: -20px;
+}
+
+.leonApples{
+  position: relative;
+  top: 5px;
+}

@@ -2,7 +2,7 @@ let boxes = [];
 let heart;
 let gagaImages = [];
 let madnessLevel = 0;
-let pulseSpeed = 0.01;
+let pulseSpeed = 0.01; // 降低脉动速度
 let judasSound;
 
 // Preload assets
@@ -17,7 +17,10 @@ function preload() {
 
   // Load sound
   judasSound = loadSound(
-    "sounds/judas.mp3");
+    "sounds/judas.mp3",
+    () => console.log("Sound loaded successfully!"),
+    () => console.error("Failed to load sound.")
+  );
 }
 
 function setup() {
@@ -68,11 +71,11 @@ class Box {
     this.x += this.speedX;
     this.y += this.speedY;
 
-    // Bounce 
+    // Bounce off edges
     if (this.x < 0 || this.x + this.w > width) this.speedX *= -1;
     if (this.y < 0 || this.y + this.h > height) this.speedY *= -1;
 
-
+    // Check for heart interaction
     if (
       mouseX > this.x && mouseX < this.x + this.w &&
       mouseY > this.y && mouseY < this.y + this.h
@@ -80,23 +83,15 @@ class Box {
       this.touched = true;
       this.color = color(random(255), random(255), random(255));
       madnessLevel += 5;
-      this.speedX *= -1.1;
+      this.speedX *= -1.1; // Slight speed boost
       this.speedY *= -1.1;
       this.speedX = constrain(this.speedX, -5, 5);
       this.speedY = constrain(this.speedY, -5, 5);
     } else {
       this.touched = false;
     }
+  }
 
-    //music
-    if (mouseX > this.x && mouseX < this.x + this.w &&
-      mouseY > this.y && mouseY < this.y + this.h && mouseIsPressed) {
-      this.music()
-    }
-  }
-  music() {
-    judasSound.play()
-  }
   display() {
     fill(this.color);
     rect(this.x, this.y, this.w, this.h);
@@ -128,14 +123,14 @@ class Heart {
   }
 }
 
-// key interactions for chaos
+// Add key interactions for chaos
 function keyPressed() {
-  // if (key === 'M' || key === 'm') {
-  //   madnessLevel += 50; // Spike madness level
-  // }
-  // if (key === 'N' || key === 'n') {
-  //   madnessLevel = 0; // Calm things down
-  // }
+  if (key === 'M' || key === 'm') {
+    madnessLevel += 50; // Spike madness level
+  }
+  if (key === 'N' || key === 'n') {
+    madnessLevel = 0; // Calm things down
+  }
   if (key === 'F' || key === 'f') {
     // Freeze all boxes
     for (let box of boxes) {

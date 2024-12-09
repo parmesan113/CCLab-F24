@@ -4,6 +4,8 @@ let gagaImages = [];
 let madnessLevel = 0;
 let pulseSpeed = 0.01;
 let judasSound;
+let soundSpeed;
+let numTouched = 0
 
 // Preload assets
 function preload() {
@@ -14,6 +16,14 @@ function preload() {
   gagaImages[0] = loadImage("assets/gaga1.png");
   gagaImages[1] = loadImage("assets/gaga2.png");
   gagaImages[2] = loadImage("assets/gaga3.png");
+  gagaImages[3] = loadImage("assets/gaga4.jpg");
+  gagaImages[4] = loadImage("assets/gaga5.jpg");
+  gagaImages[5] = loadImage("assets/gaga6.jpg");
+  gagaImages[6] = loadImage("assets/gaga7.jpg");
+  gagaImages[7] = loadImage("assets/gaga8.jpg");
+  gagaImages[8] = loadImage("assets/gaga9.jpg");
+  gagaImages[9] = loadImage("assets/gaga10.jpg");
+
 
   // Load sound
   judasSound = loadSound(
@@ -29,7 +39,7 @@ function setup() {
 
   // Create dynamic boxes
   for (let i = 0; i < 30; i++) {
-    boxes.push(new Box(random(width), random(height), random(50, 100), random(50, 100)));
+    boxes.push(new Box(random(50, width - 100), random(50, height - 100), random(50, 100), random(50, 100), gagaImages[i % gagaImages.length]));
   }
 }
 
@@ -39,7 +49,7 @@ function draw() {
   let bgcolor2 = color(0, 251, 0, 25);
   background(lerpColor(bgcolor1, bgcolor2, sin(frameCount * pulseSpeed)));
 
-  // Update and display all boxes
+
   for (let box of boxes) {
     box.update();
     box.display();
@@ -49,19 +59,27 @@ function draw() {
   noCursor();
   heart.update();
   heart.display();
+
+
+  text(numTouched, 20, 20)
 }
 
 // Box class
 class Box {
-  constructor(x, y, w, h) {
+  constructor(x, y, w, h, gagaImage) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
     this.color = color(255);
-    this.speedX = random(-2, 2);
-    this.speedY = random(-2, 2);
+    this.originalSpdX = random(-2, 2);
+    this.originalSpdY = random(-2, 2);
+    this.speedX = this.originalSpdX;
+    this.speedY = this.originalSpdY;
     this.touched = false;
+    this.addSpd = false;
+    this.showImage = false; // New property to track image display
+    this.gagaImage = gagaImage;
   }
 
   update() {
@@ -72,42 +90,52 @@ class Box {
     if (this.x < 0 || this.x + this.w > width) this.speedX *= -1;
     if (this.y < 0 || this.y + this.h > height) this.speedY *= -1;
 
-
     if (
       mouseX > this.x && mouseX < this.x + this.w &&
-      mouseY > this.y && mouseY < this.y + this.h
+      mouseY > this.y && mouseY < this.y + this.h && mouseIsPressed
     ) {
+      // If touched for the first time
+      if (this.touched == false) {
+        numTouched += 1;
+      }
+
       this.touched = true;
       this.color = color(random(255), random(255), random(255));
       madnessLevel += 5;
-      this.speedX *= -1.1;
-      this.speedY *= -1.1;
+      this.showImage = true; // Always show image after being touched
+
       this.speedX = constrain(this.speedX, -5, 5);
       this.speedY = constrain(this.speedY, -5, 5);
-    } else {
-      this.touched = false;
+    } else if (this.touched && !this.addSpd) {
+      this.speedX = this.originalSpdX * 3;
+      this.speedY = this.originalSpdY * 3;
+      this.addSpd = true;
     }
 
-    //music
+    // Music 
     if (mouseX > this.x && mouseX < this.x + this.w &&
       mouseY > this.y && mouseY < this.y + this.h && mouseIsPressed) {
-      this.music()
+      this.music();
     }
   }
+
   music() {
-    judasSound.play()
+    soundSpeed = map(numTouched, 1, 30, 1, 3);
+    judasSound.rate(soundSpeed);
+    judasSound.play();
   }
+
   display() {
     fill(this.color);
     rect(this.x, this.y, this.w, this.h);
 
-    // Show Gaga image if touched
-    if (this.touched) {
-      let gagaImage = random(gagaImages);
-      image(gagaImage, this.x, this.y, this.w * 2, this.h * 2);
+    // Show Gaga image if touched or permanently set to show
+    if (this.showImage) {
+      image(this.gagaImage, this.x, this.y, this.w, this.h);
     }
   }
 }
+
 
 // Heart class
 class Heart {
